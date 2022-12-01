@@ -6,6 +6,13 @@ To get started with Docker Engine on Debian, make sure you meet the prerequisite
 
 * You must have [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) installed on your computer.
 
+```shell
+
+# for Debian
+sudo apt update
+sudo apt install ansible -y
+
+```
 ## OS requirements
 To install Docker Engine, you need the 64-bit version of one of these Debian.
 
