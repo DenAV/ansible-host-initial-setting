@@ -1,0 +1,33 @@
+## Ansible infrastructure
+# ansible-playbook playbooks/pl_initial_setting_local.yml
+---
+- name: Playbook initial_setting
+  hosts: localhost
+  connection: local 
+  become: true
+  gather_facts: true
+
+  vars: 
+    must_docker_installed: true
+    must_ufw_configured: true
+
+  tasks:
+    - name: Role initial_setting
+      include_role: 
+        name: initial-setting
+
+    - name: Role install docker
+      include_role: 
+        name: install_docker
+      vars: 
+        docker_users:     # admin user
+          - administrator
+      when:
+        - must_docker_installed == true
+        - ansible_os_family == 'Debian'
+
+    - name: Role setup ufw
+      include_role: 
+        name: setup_ufw
+      when:
+        - must_ufw_configured == true

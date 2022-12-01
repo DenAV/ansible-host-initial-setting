@@ -1,0 +1,6 @@
+---
+# tasks file for setup_ufw
+
+- name: Setup for Debian
+  import_tasks: setup-debian.yml
+  when: ansible_os_family == 'Debian'

@@ -1,0 +1,11 @@
+---
+- name: Setup for Debian
+  import_tasks: setup-debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Setup for RedHat
+  import_tasks: setup-redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- name: Update CA bundle with self signe cert of the gitlab server
+  import_tasks: update-ca-bundle.yml

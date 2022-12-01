@@ -1,0 +1,16 @@
+---
+# vars file for Debian
+debian_packages: 
+  - nano
+  - ufw
+  - wget
+  - bzip2
+  - traceroute
+  - gdisk
+  - tree
+  - net-tools
+  - iftop
+  - htop
+  - inetutils-ping
+  - open-vm-tools
+  - python3-pip
