@@ -14,15 +14,14 @@
 - name: Ansible apt to install multiple packages - LAMP
   register: apt_installed
   apt:
-    name: "{{ item }}"
+    name: "{{ debian_packages }}"
     state: present
     update_cache: yes
-  with_items: "{{ debian_packages }}"
 
 - name: Remove dependencies that are no longer required
   ansible.builtin.apt:
     autoremove: yes
 
-- name: Run the equivalent of "apt-get clean" as a separate step
-  apt:
-    clean: yes
+- name: Run the equivalent of "apt autoclean" as a separate step
+  ansible.builtin.apt:
+    autoclean: yes
