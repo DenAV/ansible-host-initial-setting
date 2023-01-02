@@ -1,0 +1,18 @@
+---
+# The configuration sshd
+- name: Setup alternate SSH port
+  become: true
+  ansible.builtin.lineinfile:
+    dest: "/etc/ssh/sshd_config"
+    regexp: "^Port"
+    line: "Port {{ sshd_configured_port }}"
+  notify: "restart sshd"
+
+# for protecting against brute-force login attacks
+- name: protecting ssh
+  community.general.ufw:
+    rule: limit
+    port: "{{ sshd_configured_port }}"
+    proto: tcp
+    from_ip: "{{ sshd_from_ip }}"
+    log: true

@@ -1,38 +1,116 @@
-Role Name
-=========
+# Ansible setup ufw role
 
-A brief description of the role goes here.
+> `ufw` is an [Ansible](http://www.ansible.com) role which:
+>
+> * installs ufw
+> * configures ufw
+> * configures ufw rules
+> * configures service
 
-Requirements
-------------
+## Dependencies
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* Ansible >= 2.10
 
-Role Variables
---------------
+## Variables
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Here is a list of all the default variables for this role, which are also available in `defaults/main.yml`.
 
-Dependencies
-------------
+```yaml
+---
+# Start the service and enable it on system boot
+ufw_enabled: true
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+# List of packages to install
+ufw_packages: ["ufw"]
 
-Example Playbook
-----------------
+# The service name
+ufw_service: ufw
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+# List of rules to be applied
+# see https://docs.ansible.com/ansible/latest/collections/community/general/ufw_module.html for documentation
+ufw_rules:
+  - rule: allow
+    to_port: 22
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+# Manage the configuration file
+ufw_manage_config: false
 
-License
--------
+# Configuration object passed to the configuration file
+ufw_config:
+  IPV6: "yes"
+  DEFAULT_INPUT_POLICY: DROP
+  DEFAULT_OUTPUT_POLICY: ACCEPT
+  DEFAULT_FORWARD_POLICY: DROP
+  DEFAULT_APPLICATION_POLICY: SKIP
+  MANAGE_BUILTINS: "no"
+  IPT_SYSCTL: /etc/ufw/sysctl.conf
+  IPT_MODULES: ""
 
-BSD
+# Path to the configuration file
+ufw_config_file: /etc/default/ufw
 
-Author Information
-------------------
+```
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+## Handlers
+
+These are the handlers that are defined in `handlers/main.yml`.
+
+```yaml
+---
+
+- name: reset ufw
+  community.general.ufw:
+    state: reset
+
+- name: reload ufw
+  community.general.ufw:
+    state: reloaded
+  when: ufw_enabled | bool
+
+```
+
+
+## Usage
+
+This is an example playbook:
+
+```yaml
+# @see https://docs.ansible.com/ansible/latest/collections/community/general/ufw_module.html#examples
+---
+
+- hosts: all
+  become: true
+  roles:
+    - weareinteractive.ufw
+  vars:
+    ufw_rules:
+      # Set loggin
+      - logging: "full"
+      # Allow OpenSSH
+      - rule: allow
+        name: OpenSSH
+      # Delete OpenSSH rule
+      - rule: allow
+        name: OpenSSH
+        delete: true
+      # Allow all access to tcp port 80
+      - rule: allow
+        to_port: '80'
+        proto: tcp
+    # Manage the configuration file
+    ufw_manage_config: true
+    # Configuration object passed to the configuration file
+    ufw_config:
+      IPV6: "yes"
+      DEFAULT_INPUT_POLICY: DROP
+      DEFAULT_OUTPUT_POLICY: ACCEPT
+      DEFAULT_FORWARD_POLICY: DROP
+      DEFAULT_APPLICATION_POLICY: SKIP
+      MANAGE_BUILTINS: "no"
+      IPT_SYSCTL: /etc/ufw/sysctl.conf
+      IPT_MODULES: ""
+
+```
+
+## License
+Copyright (c) We Are Interactive under the MIT license.

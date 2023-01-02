@@ -1,0 +1,11 @@
+---
+
+- name: install | Installing packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ ufw_packages }}"
+
+- name: install | Configuring service state
+  community.general.ufw:
+    state: "{{ 'enabled' if ufw_enabled else 'disabled' }}"

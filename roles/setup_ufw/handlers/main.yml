@@ -1,2 +1,16 @@
 ---
 # handlers file for setup_ufw
+- name: restart sshd
+  become: true
+  service:
+    name: sshd
+    state: restarted
+
+- name: reset ufw
+  community.general.ufw:
+    state: reset
+
+- name: reload ufw
+  community.general.ufw:
+    state: reloaded
+  when: ufw_enabled | bool

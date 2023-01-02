@@ -1,6 +1,15 @@
 ---
 # tasks file for setup_ufw
 
-- name: Setup for Debian
-  import_tasks: setup-debian.yml
-  when: ansible_os_family == 'Debian'
+- name: Install UFW
+  import_tasks: install.yml
+
+- name: Configuration UFW
+  import_tasks: config.yml
+
+- name: Configuration SSH rule
+  import_tasks: config_sshd.yml
+
+- name: Manage UFW rules
+  import_tasks: rules.yml
+  when: ufw_rules_server_role | length > 0
