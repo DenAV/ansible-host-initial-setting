@@ -3,23 +3,23 @@
 ---
 - name: Playbook initial_setting
   hosts: localhost
-  connection: local 
+  connection: local
   become: true
   gather_facts: true
 
-  vars: 
+  vars:
     must_docker_installed: true
     must_ufw_configured: true
 
   tasks:
     - name: Role initial_setting
-      include_role: 
+      include_role:
         name: initial-setting
 
     - name: Role install docker
-      include_role: 
+      include_role:
         name: install_docker
-      vars: 
+      vars:
         docker_users:     # admin user
           - administrator
       when:
@@ -27,11 +27,11 @@
         - ansible_os_family == 'Debian'
 
     - name: Role setup ufw
-      include_role: 
+      include_role:
         name: setup_ufw
       vars:
         sshd_configured_port: "22"
         sshd_from_ip: "any"
-        ufw_rules_server_role: "zabbix-server"
+        ufw_rules_server_role: "npm-host"
       when:
         - must_ufw_configured == true

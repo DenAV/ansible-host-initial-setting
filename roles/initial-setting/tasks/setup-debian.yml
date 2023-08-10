@@ -11,7 +11,7 @@
     name: "*"
     state: latest
 
-- name: Ansible apt to install multiple packages - LAMP
+- name: Ansible apt to install multiple packages
   register: apt_installed
   apt:
     name: "{{ debian_packages }}"
